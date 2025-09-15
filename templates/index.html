@@ -257,6 +257,47 @@
             color: #666;
         }
 
+        .chart-controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .dropdown-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .dropdown-group label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .dropdown-group select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .dropdown-group select:hover {
+            border-color: #4facfe;
+        }
+
+        .dropdown-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -366,6 +407,15 @@
             .control-buttons {
                 flex-direction: column;
             }
+
+            .chart-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .dropdown-group select {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -426,6 +476,26 @@
         <div class="main-grid">
             <div class="card">
                 <h3>📊 Real-time Analytics</h3>
+                <div class="chart-controls">
+                    <div class="dropdown-group">
+                        <label for="chartSelector">Select Data:</label>
+                        <select id="chartSelector" onchange="updateChartData()">
+                            <option value="water_flow">💧 Water Flow Rate</option>
+                            <option value="water_level">� WWater Level</option>
+                            <option value="temperature">�️ Waoter Temperature</option>
+                            <option value="soil_moisture">🌱 Soil Moisture</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-group">
+                        <label for="timeRange">Time Range:</label>
+                        <select id="timeRange" onchange="updateTimeRange()">
+                            <option value="1h">Last Hour</option>
+                            <option value="6h">Last 6 Hours</option>
+                            <option value="24h" selected>Last 24 Hours</option>
+                            <option value="7d">Last 7 Days</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="charts-grid">
                     <div class="chart-container">
                         <canvas id="usageChart"></canvas>
@@ -510,6 +580,16 @@
         let predictionData = [];
         let timeLabels = [];
         let maxDataPoints = 20;
+
+        // Chart data storage for different sensor types
+        let chartDataStorage = {
+            water_flow: { usage: [], prediction: [], labels: [] },
+            water_level: { usage: [], prediction: [], labels: [] },
+            temperature: { usage: [], prediction: [], labels: [] },
+            soil_moisture: { usage: [], prediction: [], labels: [] }
+        };
+
+        let currentChartType = 'water_flow';
 
         // API base URL
         const API_BASE = '/api';
@@ -873,6 +953,108 @@
             predictionChart.data.datasets[0].data = [...actualFlowData];
             predictionChart.data.datasets[1].data = [...predictedFlowData];
             predictionChart.update('active');
+        }
+
+        function updateChartData() {
+            const selector = document.getElementById('chartSelector');
+            currentChartType = selector.value;
+
+            // Update chart titles and data based on selection
+            const chartConfigs = {
+                water_flow: {
+                    title: 'Water Flow Rate',
+                    unit: 'L/min',
+                    color: '#4facfe',
+                    getData: () => sensorData.flowRate
+                },
+                water_level: {
+                    title: 'Water Level',
+                    unit: '%',
+                    color: '#00f2fe',
+                    getData: () => sensorData.waterLevel
+                },
+                temperature: {
+                    title: 'Water Temperature',
+                    unit: '°C',
+                    color: '#ff6b6b',
+                    getData: () => sensorData.waterTemperature
+                },
+                soil_moisture: {
+                    title: 'Soil Moisture',
+                    unit: '%',
+                    color: '#43e97b',
+                    getData: () => sensorData.soilMoisture
+                }
+            };
+
+            const config = chartConfigs[currentChartType];
+
+            // Update chart titles
+            usageChart.options.plugins.title.text = `Real-Time ${config.title}`;
+            predictionChart.options.plugins.title.text = `${config.title}: Actual vs Predicted`;
+
+            // Update chart colors
+            usageChart.data.datasets[0].borderColor = config.color;
+            usageChart.data.datasets[0].backgroundColor = config.color + '33';
+
+            // Update y-axis labels
+            usageChart.options.scales.y.title.text = config.unit;
+            predictionChart.options.scales.y.title.text = config.unit;
+
+            // Generate new data based on current sensor reading
+            const currentValue = config.getData();
+            const newData = [];
+            const newPrediction = [];
+
+            for (let i = 0; i < maxDataPoints; i++) {
+                const variation = (Math.random() - 0.5) * (currentValue * 0.3);
+                newData.push(Math.max(0, currentValue + variation));
+                newPrediction.push(Math.max(0, currentValue + variation * 0.8));
+            }
+
+            // Update charts
+            usageChart.data.datasets[0].data = newData;
+            predictionChart.data.datasets[0].data = newData;
+            predictionChart.data.datasets[1].data = newPrediction;
+
+            usageChart.update();
+            predictionChart.update();
+
+            addAlert('success', '📊', 'Chart Updated', `Now showing ${config.title} data`);
+        }
+
+        function updateTimeRange() {
+            const timeRange = document.getElementById('timeRange').value;
+            const ranges = {
+                '1h': { points: 12, interval: 5 },    // 5 min intervals
+                '6h': { points: 18, interval: 20 },   // 20 min intervals  
+                '24h': { points: 24, interval: 60 },  // 1 hour intervals
+                '7d': { points: 14, interval: 720 }   // 12 hour intervals
+            };
+
+            const range = ranges[timeRange];
+            maxDataPoints = range.points;
+
+            // Regenerate time labels
+            timeLabels = [];
+            const now = new Date();
+            for (let i = range.points - 1; i >= 0; i--) {
+                const time = new Date(now.getTime() - i * range.interval * 60000);
+                if (timeRange === '7d') {
+                    timeLabels.push(time.toLocaleDateString().slice(0, -5)); // MM/DD format
+                } else {
+                    timeLabels.push(time.toLocaleTimeString().slice(0, -3)); // HH:MM format
+                }
+            }
+
+            // Update charts with new time range
+            usageChart.data.labels = [...timeLabels];
+            predictionChart.data.labels = [...timeLabels];
+
+            // Regenerate data for new time range
+            updateChartData();
+
+            addAlert('success', '⏰', 'Time Range Updated', `Now showing ${timeRange.replace('h', ' hours').replace('d', ' days')}`);
         }
 
         function addAlert(type, icon, title, message) {
