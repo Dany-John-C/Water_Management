@@ -1,192 +1,75 @@
-# 🌊 Smart Water Management System
+# 🌊 Smart Water Management System (Clean Architecture Refactor)
 
-A comprehensive IoT-based water management system with real-time monitoring, analytics, and alerting capabilities. Features water level, flow rate, soil moisture, and **water temperature** tracking with a modern web dashboard.
+A comprehensive, scalable IoT-based water management system with real-time monitoring, analytics, and alerting capabilities. Designed with Clean Architecture principles for easy scalability and maintenance.
 
 ## ✨ Features
 
-### 🔧 Sensor Monitoring
-- **Water Level**: Real-time tank level monitoring with visual progress indicator
-- **Flow Rate**: Water flow measurement in L/min
-- **Soil Moisture**: Irrigation monitoring and alerts
-- **Water Temperature**: Temperature tracking with freeze/overheat alerts
-
-### 📊 Analytics & Visualization
-- Real-time charts with historical data
-- Usage vs prediction analytics
-- Performance metrics dashboard
-- 24-hour data retention and analysis
-
-### 🚨 Smart Alerts
-- Automatic threshold-based alerting
-- Temperature-based warnings (freeze/overheat)
-- Flow rate anomaly detection
-- Low moisture irrigation alerts
-
-### 💾 Data Management
-- SQLite database with full CRUD operations
-- RESTful API for all data operations
-- Data export functionality
-- Historical data analysis
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.7+
-- pip (Python package manager)
-
-### Installation & Setup
-
-1. **Clone or download the project files**
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the complete system:**
-   ```bash
-   python run.py
-   ```
-
-4. **Access the dashboard:**
-   Open your browser to `http://localhost:5000`
-
-The system will automatically:
-- Create the SQLite database
-- Generate sample historical data
-- Start the Flask web server
-- Begin the data simulator for live updates
+- **Real-Time Monitoring**: Tracks water level, flow rate, soil moisture, and water temperature.
+- **Robust Firmware**: ESP8266/Arduino firmware with non-blocking delays and Wi-Fi retry logic.
+- **Clean Architecture Backend**: Flask application factored into blueprints, separate models, and controllers.
+- **Centralized Alert Engine**: Smart debouncing logic config-driven threshold monitoring.
+- **Advanced Dashboard**: Responsive UI, real-time polling with fallbacks, predictive analytics, and Dark Mode.
 
 ## 🏗️ Architecture
 
-### Backend (Flask)
-- **app.py**: Main Flask application with API endpoints
-- **Database Models**: SQLAlchemy models for sensors, alerts, and metrics
-- **RESTful API**: Complete CRUD operations for all data types
-
-### Frontend (HTML/JavaScript)
-- **Responsive Design**: Modern glassmorphism UI with mobile support
-- **Real-time Updates**: Live data fetching every 5 seconds
-- **Interactive Charts**: Chart.js integration for data visualization
-- **Progressive Enhancement**: Works without JavaScript for basic functionality
-
-### Data Simulation
-- **data_simulator.py**: Realistic sensor data generation
-- **Continuous Updates**: Simulates real IoT sensor behavior
-- **Natural Variations**: Temperature cycles, flow patterns, moisture depletion
-
-## 📡 API Endpoints
-
-### Sensor Data
-- `GET /api/sensors/current` - Latest sensor readings
-- `GET /api/sensors/history` - Historical data (24 hours)
-- `POST /api/sensors` - Add new sensor reading
-
-### Alerts
-- `GET /api/alerts` - Recent system alerts
-
-### Metrics
-- `GET /api/metrics/current` - Current system performance
-
-### Data Export
-- `GET /api/export` - Export all data as JSON
-
-## 🗄️ Database Schema
-
-### SensorReading
-- `id`, `timestamp`, `water_level`, `flow_rate`, `soil_moisture`, `water_temperature`
-
-### Alert
-- `id`, `timestamp`, `alert_type`, `icon`, `title`, `message`, `is_active`
-
-### SystemMetrics
-- `id`, `timestamp`, `cpu_utilization`, `response_time`, `throughput`, `storage_util`, `energy_consumption`, `alert_accuracy`
-
-## 🎛️ System Controls
-
-- **Start/Pause**: Control data collection
-- **Generate Report**: Create system performance reports
-- **Export Data**: Download complete dataset
-- **Reset System**: Clear alerts and reset to defaults
-
-## 🔧 Configuration
-
-### Simulation Parameters
-Edit `data_simulator.py` to adjust:
-- Update intervals
-- Sensor value ranges
-- Variation patterns
-- Alert thresholds
-
-### Database Configuration
-Modify `app.py` for:
-- Database URL (currently SQLite)
-- Data retention periods
-- Alert conditions
-
-## 📱 Mobile Support
-
-The dashboard is fully responsive and optimized for:
-- Desktop browsers
-- Tablets
-- Mobile phones
-- Touch interfaces
-
-## 🛠️ Development
-
-### Running Components Separately
-
-**Flask Server Only:**
-```bash
-python app.py
+```text
+Sensors -> ESP8266 Firmware -> REST API -> Flask (Blueprints) -> SQLite Database -> Frontend Dashboard
 ```
 
-**Data Simulator Only:**
-```bash
-python data_simulator.py
-```
+1. **Hardware / Firmware Layer (`/firmware`)**
+2. **Configuration Layer (`.env`, `config/config.py`)**
+3. **Application Layer (`/app`)**
+   - Routes (`app/routes/`)
+   - Services (`app/services/alert_engine.py`)
+   - Models (`app/models/models.py`)
+4. **Presentation Layer (`/templates`, `/static`)**
 
-### Adding New Sensors
-1. Update database models in `app.py`
-2. Add API endpoints for new sensor types
-3. Update frontend JavaScript to handle new data
-4. Modify simulator to generate appropriate data
+## 🔧 Hardware Wiring Guide (ESP8266 NodeMCU)
 
-## 🔍 Troubleshooting
+| Sensor | Pin on ESP8266 | Description |
+|--------|----------------|-------------|
+| **HC-SR04** (Water Level)| `D1` (Trig), `D2` (Echo)| Ultrasonic distance sensor |
+| **YF-S201** (Flow Rate)| `D3` | Water flow meter (uses interrupt) |
+| **YL-69** (Soil Moisture)| `A0` | Analog soil moisture sensor |
+| **DS18B20** (Temperature)| `D4` | 1-Wire temperature sensor |
 
-### Common Issues
+## 🚀 Quick Start & Deployment
 
-**Port 5000 already in use:**
-- Change the port in `app.py`: `app.run(port=5001)`
+### 1. Backend Setup
 
-**Database errors:**
-- Delete `water_management.db` and restart
-- Check file permissions in the project directory
+1. **Clone the repository**
+2. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Configure Environment:**
+    Review the `.env` file for database bounds and alert thresholds.
+4. **Run the Server:**
+   ```bash
+   python run.py
+   ```
+   *Note: `run.py` will automatically create the database schemas and spin up dummy sensor data if the table is empty.*
 
-**Connection errors:**
-- Ensure Flask server is running before starting simulator
-- Check firewall settings for port 5000
+### 2. Firmware Deployment
 
-### Logs & Debugging
-- Flask debug mode: Set `debug=True` in `app.py`
-- Simulator logs: Check console output for connection status
-- Browser console: Check for JavaScript errors
+1. Open `firmware/SmartWaterNode/SmartWaterNode.ino` in the Arduino IDE.
+2. Install dependencies via Library Manager:
+   - `ArduinoJson` (by Benoit Blanchon)
+   - `OneWire` (by Paul Stoffregen)
+   - `DallasTemperature` (by Miles Burton)
+3. Change `YOUR_WIFI_SSID` and `YOUR_WIFI_PASSWORD`.
+4. Change `serverUrl` to point to the backend IPv4 Address (e.g., `http://192.168.1.100:5000/api/sensors`).
+5. Flash to the ESP8266.
 
-## 📈 Future Enhancements
+## 📡 API Endpoints Structure
 
-- [ ] Multi-location support
-- [ ] Advanced ML predictions
-- [ ] Mobile app integration
-- [ ] Cloud database support
-- [ ] Real IoT device integration
-- [ ] User authentication
-- [ ] Historical trend analysis
-- [ ] Automated irrigation control
+- `GET /api/sensors/current` - Latest sensor data
+- `GET /api/sensors/history` - Historical data for charts
+- `POST /api/sensors` - Node endpoint for publishing telemetry
+- `GET /api/sensors/predict` - Real predictive analysis
+- `GET /api/alerts` - Active alerts list
+- `GET /api/metrics/current` - System health stats
 
-## 🤝 Contributing
+## 📈 Future Scalability
 
-Feel free to submit issues, feature requests, or pull requests to improve the system!
-
-## 📄 License
-
-This project is open source and available under the MIT License.
+Built to easily swap out SQLite for PostgreSQL/MySQL via `.env` adjustments, and modular routes make expanding to MQTT or adding JWT authentication straightforward. All layers are decoupled ensuring a robust IoT system.

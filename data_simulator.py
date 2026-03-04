@@ -72,10 +72,10 @@ class WaterSensorSimulator:
     
     def run_simulation(self):
         """Main simulation loop"""
-        print("🌊 Starting Water Management System Data Simulator")
-        print(f"📡 Sending data to: {self.api_url}")
-        print(f"⏱️  Update interval: {self.update_interval} seconds")
-        print("🔄 Press Ctrl+C to stop\n")
+        print("Starting Water Management System Data Simulator")
+        print(f"Sending data to: {self.api_url}")
+        print(f"Update interval: {self.update_interval} seconds")
+        print("Press Ctrl+C to stop the simulator")
         
         self.running = True
         
@@ -88,7 +88,7 @@ class WaterSensorSimulator:
                 success = self.send_sensor_data(sensor_data)
                 
                 if not success:
-                    print("⚠️  Retrying in 5 seconds...")
+                    print("Retrying in 5 seconds...")
                     time.sleep(5)
                     continue
                 
@@ -96,10 +96,10 @@ class WaterSensorSimulator:
                 time.sleep(self.update_interval)
                 
         except KeyboardInterrupt:
-            print("\n🛑 Simulation stopped by user")
+            print("Simulator stopped.")
             self.running = False
         except Exception as e:
-            print(f"\n❌ Simulation error: {e}")
+            print(f"Simulation error: {e}")
             self.running = False
     
     def stop(self):
