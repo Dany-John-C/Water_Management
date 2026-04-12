@@ -33,9 +33,8 @@ const char* password = "YOUR_WIFI_PASSWORD";
 const String serverUrl = "http://YOUR_SERVER_IP:5000/api/sensors";
 
 // --- Pin Definitions ---
-// Ultrasonic Sensor (HC-SR04) - Water Level
-#define TRIG_PIN D1
-#define ECHO_PIN D2
+// Resistive water level sensor (often sold as a “Water Level Sensor Module” or “Rain/Water Detection Sensor”)
+#define WATER_LEVEL_PIN A0 // Note: ESP8266 has only 1 ADC. Requires multiplexer if using YL-69
 // Flow Sensor (YF-S201)
 #define FLOW_PIN D3
 // Soil Moisture (YL-69)
@@ -74,8 +73,7 @@ void setup() {
   Serial.println("\n--- Smart Water Management Node Starting ---");
 
   // Init Pins
-  pinMode(TRIG_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
+  // pinMode(WATER_LEVEL_PIN, INPUT); // Not strictly required for A0
   pinMode(FLOW_PIN, INPUT_PULLUP);
   
   attachInterrupt(digitalPinToInterrupt(FLOW_PIN), pulseCounter, FALLING);
@@ -139,7 +137,7 @@ void connectWiFi() {
 
 void readAllSensors() {
   Serial.println("Reading Sensors...");
-  currentWaterLevel = readUltrasonic();
+  currentWaterLevel = readWaterLevel();
   currentSoilMoisture = readSoilMoisture();
   currentTemperature = readTemperature();
   currentFlowRate = calculateFlowRate();
@@ -148,19 +146,10 @@ void readAllSensors() {
                 currentWaterLevel, currentFlowRate, currentSoilMoisture, currentTemperature);
 }
 
-float readUltrasonic() {
-  digitalWrite(TRIG_PIN, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-  
-  long duration = pulseIn(ECHO_PIN, HIGH);
-  float distanceCm = duration * 0.034 / 2;
-  
-  // Convert distance to a percentage (Assume tank depth is 100cm for example)
-  float maxDepth = 100.0; 
-  float percentage = ((maxDepth - distanceCm) / maxDepth) * 100.0;
+float readWaterLevel() {
+  int rawValue = analogRead(WATER_LEVEL_PIN);
+  // Resistive sensor: 0 = dry, ~700 = submerged. Map to 0-100%
+  float percentage = map(rawValue, 0, 700, 0, 100);
   
   if(percentage < 0) percentage = 0;
   if(percentage > 100) percentage = 100;

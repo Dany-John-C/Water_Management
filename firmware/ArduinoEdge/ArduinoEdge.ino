@@ -91,7 +91,7 @@ const float DELTA_MOISTURE = 0.5;    // %
 const float DELTA_TEMPERATURE = 0.2; // °C
 
 // Tank physical dimensions
-const float TANK_DEPTH_CM = 100.0; // Ultrasonic: 100cm max depth (Unused for analog but kept for reference)
+const float TANK_DEPTH_CM = 100.0; // Tank depth (Unused for analog but kept for reference)
 
 // ═══════════════════════════════════════════════════════════
 // GLOBAL STATE

@@ -161,7 +161,7 @@
 
 To design and implement an AI-powered IoT water management system that uses \textbf{multi-sensor probabilistic fusion} to detect, localize, and respond to water leaks and anomalies in real-time.
 
-The system uses a 2-tier edge architecture (Arduino Uno R3 + NodeMCU ESP8266) with four sensors (HC-SR04, YF-S201, YL-69, DS18B20) and runs 10 AI/ML engines — including Bayesian leak detection, weather-adaptive irrigation, physics-based sensor self-diagnostics, adaptive energy optimization, and online baseline learning — all implemented from scratch in pure Python.
+The system uses a 2-tier edge architecture (Arduino Uno R3 + NodeMCU ESP8266) with four sensors (Resistive Water Level Sensor, YF-S201, YL-69, DS18B20) and runs 10 AI/ML engines — including Bayesian leak detection, weather-adaptive irrigation, physics-based sensor self-diagnostics, adaptive energy optimization, and online baseline learning — all implemented from scratch in pure Python.
 
 Key objectives:
 \begin{itemize}
@@ -218,7 +218,7 @@ Cloud & PC (Flask) & 10 AI engines, SQLite DB (13 tables), REST API, 3D dashboar
 \hline
 2 & Microcontroller (Gateway) & NodeMCU ESP8266 & WiFi gateway \\
 \hline
-3 & Ultrasonic Sensor & HC-SR04 & Water level \\
+3 & Resistive Water Level Sensor & Analog Module & Water level \\
 \hline
 4 & Flow Sensor & YF-S201 & Flow rate \\
 \hline

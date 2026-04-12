@@ -28,7 +28,7 @@ Sensors -> ESP8266 Firmware -> REST API -> Flask (Blueprints) -> SQLite Database
 
 | Sensor | Pin on ESP8266 | Description |
 |--------|----------------|-------------|
-| **HC-SR04** (Water Level)| `D1` (Trig), `D2` (Echo)| Ultrasonic distance sensor |
+| **Resistive Water Level Sensor** (Water Level)| `A0` (Note: ESP8266 has only 1 ADC. Requires multiplexer if using YL-69)| Resistive water level sensor (often sold as a “Water Level Sensor Module” or “Rain/Water Detection Sensor”) |
 | **YF-S201** (Flow Rate)| `D3` | Water flow meter (uses interrupt) |
 | **YL-69** (Soil Moisture)| `A0` | Analog soil moisture sensor |
 | **DS18B20** (Temperature)| `D4` | 1-Wire temperature sensor |
