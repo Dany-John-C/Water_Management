@@ -1,0 +1,300 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{parskip}
+
+\definecolor{titleblue}{RGB}{0, 51, 102}
+\definecolor{sectionblue}{RGB}{0, 76, 153}
+\definecolor{accentgray}{RGB}{120, 120, 120}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{accentgray}{AquaIntel — Smart Water Management System}}
+\fancyhead[R]{\small\textcolor{accentgray}{Review 2}}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{colorlinks=true, linkcolor=sectionblue, urlcolor=sectionblue}
+
+\begin{document}
+
+% ═══════════════════════════════════════════════════════════
+% TITLE PAGE
+% ═══════════════════════════════════════════════════════════
+
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+
+    % ── VIT Logo ──
+    \begin{figure}[H]
+        \centering
+        \fbox{\parbox{4cm}{\centering\vspace{1.2cm}\textcolor{accentgray}{\textit{VIT Logo}}\vspace{1.2cm}}}
+        % \includegraphics[width=4cm]{images/vit_logo.png}
+    \end{figure}
+
+    \vspace{0.3cm}
+
+    {\Large\textbf{Vellore Institute of Technology}}\\[0.2cm]
+    {\large School of Computer Science and Engineering}
+
+    \vspace{1.5cm}
+
+    \rule{\textwidth}{1.5pt}\\[0.4cm]
+    {\Huge\bfseries\textcolor{titleblue}{AquaIntel}}\\[0.3cm]
+    {\LARGE\textbf{AI-Powered Smart Water Management System}}\\[0.1cm]
+    \rule{\textwidth}{1.5pt}
+
+    \vspace{0.8cm}
+
+    {\Large\textbf{Review 2 — 70\% Implementation (Simulation)}}
+
+    \vspace{1.5cm}
+
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        {\large\textbf{Team Members}}\\[0.4cm]
+        \begin{tabular}{ll}
+            1. & \textbf{Name 1} \\
+               & Reg No: XXXXXXXXXX \\[0.3cm]
+            2. & \textbf{Name 2} \\
+               & Reg No: XXXXXXXXXX \\[0.3cm]
+            3. & \textbf{Name 3} \\
+               & Reg No: XXXXXXXXXX \\[0.3cm]
+            4. & \textbf{Name 4} \\
+               & Reg No: XXXXXXXXXX \\
+        \end{tabular}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        {\large\textbf{Guide}}\\[0.4cm]
+        \begin{tabular}{l}
+            \textbf{Prof./Dr. Guide Name} \\
+            Designation \\
+            School of CSE \\
+            VIT \\[0.5cm]
+            \textbf{Cabin:} AB3, First Floor, \\
+            Cabin No. 18
+        \end{tabular}
+    \end{minipage}
+
+    \vfill
+
+    {\large Submission Period: 26.02.2026 -- 06.03.2026}\\[0.2cm]
+    {\normalsize B.Tech IoT — Academic Year 2025--2026}
+
+\end{titlepage}
+
+% ═══════════════════════════════════════════════════════════
+% 1. TITLE
+% ═══════════════════════════════════════════════════════════
+
+\section{Title}
+
+\textbf{AquaIntel — AI-Powered Smart Water Management System with Multi-Sensor Fusion and Edge Intelligence}
+
+\textbf{Domain:} Internet of Things (IoT), Artificial Intelligence, Embedded Systems
+
+% ═══════════════════════════════════════════════════════════
+% 2. TEAM NAME & MEMBERS
+% ═══════════════════════════════════════════════════════════
+
+\section{Team Name \& Members}
+
+\textbf{Team Name:} \textit{[Your Team Name]}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{S.No.} & \textbf{Name} & \textbf{Register Number} \\
+\hline
+1 & Name 1 & XXXXXXXXXX \\
+\hline
+2 & Name 2 & XXXXXXXXXX \\
+\hline
+3 & Name 3 & XXXXXXXXXX \\
+\hline
+4 & Name 4 & XXXXXXXXXX \\
+\hline
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════
+% 3. GUIDE DETAILS
+% ═══════════════════════════════════════════════════════════
+
+\section{Guide Details}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Name} & Prof./Dr. [Guide Name] \\
+\hline
+\textbf{Designation} & [Assistant / Associate Professor] \\
+\hline
+\textbf{School} & School of Computer Science and Engineering \\
+\hline
+\textbf{Institution} & Vellore Institute of Technology \\
+\hline
+\textbf{Cabin} & AB3, First Floor, Cabin No. 18 \\
+\hline
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════
+% 4. OBJECTIVE
+% ═══════════════════════════════════════════════════════════
+
+\section{Objective}
+
+To design and implement an AI-powered IoT water management system that uses \textbf{multi-sensor probabilistic fusion} to detect, localize, and respond to water leaks and anomalies in real-time.
+
+The system uses a 2-tier edge architecture (Arduino Uno R3 + NodeMCU ESP8266) with four sensors (HC-SR04, YF-S201, YL-69, DS18B20) and runs 10 AI/ML engines — including Bayesian leak detection, weather-adaptive irrigation, physics-based sensor self-diagnostics, adaptive energy optimization, and online baseline learning — all implemented from scratch in pure Python.
+
+Key objectives:
+\begin{itemize}
+    \item Detect leaks via multi-sensor fusion: $P(\text{leak}) = 1 - \prod_{i=1}^{n}(1 - P_i)$
+    \item Auto-close servo valves on leak detection and verify stoppage
+    \item Self-diagnose sensor faults using physics cross-validation
+    \item Optimize energy by adapting sampling (2s--60s) based on stability index
+    \item Learn installation-specific baselines via Welford's online algorithm
+    \item Visualize on a real-time 3D web dashboard (Three.js + Chart.js)
+\end{itemize}
+
+% ═══════════════════════════════════════════════════════════
+% 5. ARCHITECTURE
+% ═══════════════════════════════════════════════════════════
+
+\section{Architecture}
+
+\subsection{System Architecture Diagram}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textcolor{accentgray}{\large\textit{[INSERT: System Architecture Diagram]\\[0.3cm]
+    Sensors $\rightarrow$ Arduino Uno (Edge) $\rightarrow$ ESP8266 (WiFi Gateway) $\rightarrow$ Flask Server + Dashboard}}\vspace{4cm}}}
+    \caption{AquaIntel — 3-Tier IoT Architecture}
+\end{figure}
+
+\subsection{Architecture Overview}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{7.5cm}|}
+\hline
+\textbf{Tier} & \textbf{Hardware} & \textbf{Role} \\
+\hline
+Edge & Arduino Uno R3 & Reads 4 sensors, controls servo valve + buzzer, delta compression, Serial to ESP8266 \\
+\hline
+Gateway & NodeMCU ESP8266 & WiFi, HTTP POST to Flask, offline buffer (20 packets), relays commands \\
+\hline
+Cloud & PC (Flask) & 10 AI engines, SQLite DB (13 tables), REST API, 3D dashboard \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Hardware Components}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|l|l|l|}
+\hline
+\textbf{\#} & \textbf{Component} & \textbf{Model} & \textbf{Purpose} \\
+\hline
+1 & Microcontroller (Edge) & Arduino Uno R3 & Sensor processing + actuators \\
+\hline
+2 & Microcontroller (Gateway) & NodeMCU ESP8266 & WiFi gateway \\
+\hline
+3 & Ultrasonic Sensor & HC-SR04 & Water level \\
+\hline
+4 & Flow Sensor & YF-S201 & Flow rate \\
+\hline
+5 & Moisture Sensor & YL-69 + FC-28 & Soil moisture \\
+\hline
+6 & Temperature Sensor & DS18B20 & Water temperature \\
+\hline
+7 & Servo Motor & SG90 & Valve control \\
+\hline
+8 & Buzzer & Active 5V & Leak alarm \\
+\hline
+9 & Level Converter & Bi-directional & 5V $\leftrightarrow$ 3.3V Serial bridge \\
+\hline
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════
+% 6. IMPLEMENTATION SCREENSHOTS
+% ═══════════════════════════════════════════════════════════
+
+\section{Implementation Screenshots}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{5cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    Dashboard overview — sensor cards, ring gauges, 3D background}}\vspace{5cm}}}
+    \caption{Dashboard — Overview}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{5cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    AI Engine page — leak, anomaly, health, valve, calibration, energy, baseline}}\vspace{5cm}}}
+    \caption{Dashboard — AI Intelligence Panel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{5cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    Chart.js graphs — water level, flow, moisture, temperature over time}}\vspace{5cm}}}
+    \caption{Dashboard — Real-Time Analytics}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    Terminal — Flask server + data simulator sending readings}}\vspace{4cm}}}
+    \caption{Server Console — Simulation Running}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    Browser — JSON from /api/intelligence/dashboard}}\vspace{4cm}}}
+    \caption{API Response — Intelligence Dashboard}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    Infrastructure page — edge-cloud status, data reduction \%}}\vspace{4cm}}}
+    \caption{Dashboard — Edge-Cloud Infrastructure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textcolor{accentgray}{\large\textit{[INSERT SCREENSHOT]\\[0.2cm]
+    Three.js 3D water molecules + particle effects}}\vspace{4cm}}}
+    \caption{Three.js 3D Animated Background}
+\end{figure}
+
+\vspace{1cm}
+\begin{center}
+\rule{0.5\textwidth}{0.4pt}\\[0.3cm]
+\textit{Review 2 — 70\% Implementation (Software Simulation)}\\
+\textit{26.02.2026 -- 06.03.2026 \quad | \quad Total Marks: 10}
+\end{center}
+
+\end{document}

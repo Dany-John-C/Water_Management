@@ -10,6 +10,7 @@ from core_app.services.calibration_engine import calibration_engine
 from core_app.services.energy_optimizer import energy_optimizer
 from core_app.services.baseline_learner import baseline_learner
 from core_app.services.edge_cloud import edge_cloud_manager
+from core_app.services.pump_control import pump_controller
 from core_app import db
 from datetime import datetime, timedelta
 import math
@@ -56,6 +57,9 @@ def add_sensor_reading():
         # Check for alerts using the centralized engine
         check_and_create_alerts(reading)
         
+        # Check automatic irrigation logic
+        pump_controller.evaluate_auto_irrigation(reading.soil_moisture)
+
         # --- Novel Intelligence Engines ---
         # Patent Claim 1: Multi-sensor fusion leak detection
         leak_detections = []

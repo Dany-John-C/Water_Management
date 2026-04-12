@@ -96,10 +96,10 @@ def main():
         from core_app.models.models import SensorReading
         with flask_app.app_context():
             db.create_all()
-            if SensorReading.query.count() == 0:
-                generate_sample_data()
-            else:
-                print("Database already contains data")
+            # if SensorReading.query.count() == 0:
+            #     generate_sample_data()
+            # else:
+            #     print("Database already contains data")
 
     def run_flask_app():
         print("Starting modular Flask server...")
@@ -123,9 +123,11 @@ def main():
         flask_thread = threading.Thread(target=run_flask_app)
         flask_thread.daemon = True
         flask_thread.start()
-        
-        run_data_simulator()
-        
+
+        # Keep the main thread alive since we don't want the simulator anymore
+        while True:
+            time.sleep(1)
+
     except KeyboardInterrupt:
         print("\nShutting down system...")
         print("Goodbye!")

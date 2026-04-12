@@ -4,11 +4,12 @@
 // ─── GLOBALS ───
 let usageChart, predictionChart;
 let simulationRunning = true;
+// Start with neutral values; real data will come from /api/sensors/current
 let sensorData = {
-  waterLevel: 85,
-  flowRate: 24.5,
-  soilMoisture: 67,
-  waterTemperature: 22.5,
+  waterLevel: 0,
+  flowRate: 0,
+  soilMoisture: 0,
+  waterTemperature: 0,
 };
 const sensorLimits = {
   waterLevel: { min: 20, max: 95 },
@@ -24,6 +25,42 @@ let currentChartType = "water_flow";
 let audioContext,
   isAlarmActive = false;
 let alertCount = 0;
+let isPumpOn = false;
+
+// ─── PUMP CONTROL ───
+async function togglePump() {
+  const btn = document.getElementById("pumpToggleBtn");
+  const newState = isPumpOn ? "off" : "on";
+  
+  btn.innerHTML = `<span class="cb-icon">⏳</span> Sending...`;
+  btn.style.opacity = "0.7";
+  
+  try {
+    const response = await fetch('/api/motor', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ state: newState })
+    });
+    
+    const data = await response.json();
+    if(data.success) {
+      isPumpOn = (data.motor_state === 'on');
+      if (isPumpOn) {
+        btn.innerHTML = `<span class="cb-icon">🛑</span> Turn Pump OFF`;
+        btn.className = "ctrl-btn alert";
+      } else {
+        btn.innerHTML = `<span class="cb-icon">💧</span> Turn Pump ON`;
+        btn.className = "ctrl-btn success";
+      }
+    }
+  } catch (error) {
+    console.error("Pump toggle error:", error);
+  } finally {
+    btn.style.opacity = "1";
+  }
+}
 
 // ─── INIT ───
 document.addEventListener("DOMContentLoaded", () => {
@@ -35,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCharts();
   initCardInteractions();
   initButtonEffects();
+  // Fetch once from backend before showing initial values
   loadInitialData();
   startRealTimeUpdates();
 });
@@ -370,13 +408,10 @@ function updateSensorUI() {
 // CHARTS (Chart.js)
 // ═══════════════════════════════════════════════════════════
 function initCharts() {
-  const now = new Date();
-  for (let i = 0; i < 10; i++) {
-    const t = new Date(now.getTime() - (9 - i) * 5000);
-    timeLabels.push(t.toLocaleTimeString().slice(0, -3));
-    usageData.push(Math.round(150 + Math.random() * 100));
-    predictionData.push(Math.round(140 + Math.random() * 120));
-  }
+  // Start charts empty; they will be filled with live sensor data
+  timeLabels = [];
+  usageData = [];
+  predictionData = [];
 
   // Global Chart.js dark config
   Chart.defaults.color = "#94a3b8";
@@ -592,9 +627,16 @@ function updateAlertBadge() {
 // ═══════════════════════════════════════════════════════════
 // REAL-TIME LOOP
 // ═══════════════════════════════════════════════════════════
-function loadInitialData() {
+async function loadInitialData() {
+  // Try to get the latest reading from the backend before first render
+  try {
+    await fetchSensorData();
+    addAlert("ok", "System Initialized", "Waiting for live sensor data...");
+  } catch (e) {
+    // If the backend is not ready yet, just render zeros and connection status
+    addAlert("warn", "System Initialized", "Backend not reachable yet; showing defaults.");
+  }
   updateSensorUI();
-  addAlert("ok", "System Initialized", "All sensors connected");
 }
 
 function startRealTimeUpdates() {
